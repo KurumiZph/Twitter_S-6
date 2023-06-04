@@ -1,18 +1,23 @@
 // Set up the Express app and require dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
 const Post = require('./models/post');
-const postsRouter = require('./routes/posts');
 const User = require('./models/user');
 const bcrypt = require('bcrypt');
 
+// Import the auth route
+const authRouter = require('./routes/users/auth');
+
+// Use the auth route
+app.use('/auth', authRouter);
 
 app.use(bodyParser.json());
 
 // Set up a connection to MongoDB
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://Kurumi:M0NaGsGqPqpSTFFovPnV@cluster0.a72baeo.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://Kurumi:cfpxl2uu1RgwrYJS@cluster69.rurhujb.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -24,15 +29,18 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+const usersRouter = require('./routes/users');
+app.use('/users', usersRouter);
+
+const postsRouter = require('./routes/posts');
 app.use('/', postsRouter);
 
-//Set the PORT for operation
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set the PORT for operation
 const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
-
-const usersRouter = require('./routes/users');
-
-app.use('/users', usersRouter);

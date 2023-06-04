@@ -6,4 +6,4 @@ const tweetsSchema = new mongoose.Schema({
     //tweets: mongoose.ObjectId 
 });
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Tweet', tweetsSchema);
